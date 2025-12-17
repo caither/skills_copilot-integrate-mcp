@@ -6,18 +6,20 @@ A super simple FastAPI application that allows students to view and sign up for 
 
 - View all available extracurricular activities
 - Sign up for activities
+- Unregister from activities
+- **100% 測試覆蓋率**：完整的 pytest 測試套件
 
 ## Getting Started
 
 1. Install the dependencies:
 
-   ```
-   pip install fastapi uvicorn
+   ```bash
+   pip install -r ../requirements.txt
    ```
 
 2. Run the application:
 
-   ```
+   ```bash
    python app.py
    ```
 
@@ -25,12 +27,29 @@ A super simple FastAPI application that allows students to view and sign up for 
    - API documentation: http://localhost:8000/docs
    - Alternative documentation: http://localhost:8000/redoc
 
+## Testing
+
+運行完整測試套件：
+
+```bash
+pytest tests/test_app.py -v
+```
+
+查看代碼覆蓋率報告：
+
+```bash
+pytest tests/test_app.py --cov=src --cov-report=html
+```
+
+詳細資訊請參考 [測試文檔](../docs/testing.md)。
+
 ## API Endpoints
 
 | Method | Endpoint                                                          | Description                                                         |
 | ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
 | POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Unregister from an activity                                     |
 
 ## Data Model
 
