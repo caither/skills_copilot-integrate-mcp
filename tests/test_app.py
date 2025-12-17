@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from src.app import app, activities
+from src.app import app, activities, logged_in_teachers
 
 
 @pytest.fixture
@@ -351,3 +351,159 @@ class TestEdgeCases:
             params={"email": "student@mergington.edu"}
         )
         assert response.status_code == 404
+
+
+# ============================================================================
+# Authentication Tests
+# ============================================================================
+
+class TestAuthentication:
+    """Test teacher authentication and authorization"""
+
+    @pytest.fixture(autouse=True)
+    def cleanup_logged_in(self):
+        """Clear logged in teachers before and after each test"""
+        logged_in_teachers.clear()
+        yield
+        logged_in_teachers.clear()
+
+    def test_successful_login(self, client):
+        """Test successful teacher login"""
+        response = client.post(
+            "/login",
+            params={"username": "teacher1", "password": "password123"}
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["message"] == "Login successful"
+        assert data["username"] == "teacher1"
+
+    def test_invalid_password(self, client):
+        """Test login with invalid password"""
+        response = client.post(
+            "/login",
+            params={"username": "teacher1", "password": "wrongpassword"}
+        )
+        assert response.status_code == 401
+        assert "Invalid credentials" in response.json()["detail"]
+
+    def test_nonexistent_teacher(self, client):
+        """Test login with non-existent teacher"""
+        response = client.post(
+            "/login",
+            params={"username": "nonexistent", "password": "password123"}
+        )
+        assert response.status_code == 401
+        assert "Invalid credentials" in response.json()["detail"]
+
+    def test_successful_logout(self, client):
+        """Test successful teacher logout"""
+        # First login
+        client.post(
+            "/login",
+            params={"username": "teacher1", "password": "password123"}
+        )
+
+        # Then logout
+        response = client.post(
+            "/logout",
+            params={"username": "teacher1"}
+        )
+        assert response.status_code == 200
+        assert response.json()["message"] == "Logout successful"
+
+    def test_logout_not_logged_in_user(self, client):
+        """Test logout of user who wasn't logged in"""
+        response = client.post(
+            "/logout",
+            params={"username": "teacher1"}
+        )
+        assert response.status_code == 200
+        assert response.json()["message"] == "User was not logged in"
+
+    def test_multiple_teachers_login(self, client):
+        """Test multiple teachers can login"""
+        # Teacher 1 login
+        response1 = client.post(
+            "/login",
+            params={"username": "teacher1", "password": "password123"}
+        )
+        assert response1.status_code == 200
+
+        # Teacher 2 login
+        response2 = client.post(
+            "/login",
+            params={"username": "teacher2", "password": "password456"}
+        )
+        assert response2.status_code == 200
+
+        # Both should be able to logout
+        logout1 = client.post(
+            "/logout",
+            params={"username": "teacher1"}
+        )
+        logout2 = client.post(
+            "/logout",
+            params={"username": "teacher2"}
+        )
+        assert logout1.status_code == 200
+        assert logout2.status_code == 200
+
+
+# ============================================================================
+# Authorization Tests
+# ============================================================================
+
+class TestAuthorization:
+    """Test teacher authorization for activity management"""
+
+    @pytest.fixture(autouse=True)
+    def cleanup_logged_in(self):
+        """Clear logged in teachers before and after each test"""
+        logged_in_teachers.clear()
+        yield
+        logged_in_teachers.clear()
+
+    def test_teacher_can_unregister_students(self, client, reset_activities):
+        """Test that logged-in teacher can unregister students"""
+        # First login
+        client.post(
+            "/login",
+            params={"username": "teacher1", "password": "password123"}
+        )
+
+        # Teacher unregisters a student
+        response = client.delete(
+            "/activities/Chess Club/unregister",
+            params={
+                "email": "michael@mergington.edu",
+                "teacher_username": "teacher1"
+            }
+        )
+        assert response.status_code == 200
+
+        # Verify student was removed
+        activities_response = client.get("/activities")
+        assert "michael@mergington.edu" not in activities_response.json()["Chess Club"]["participants"]
+
+    def test_teacher_can_signup_students(self, client, reset_activities):
+        """Test that teacher can signup students for activities"""
+        # First login
+        client.post(
+            "/login",
+            params={"username": "teacher1", "password": "password123"}
+        )
+
+        # Teacher signs up a student
+        response = client.post(
+            "/activities/Drama Club/signup",
+            params={
+                "email": "newstudent@mergington.edu",
+                "teacher_username": "teacher1"
+            }
+        )
+        assert response.status_code == 200
+
+        # Verify student was added
+        activities_response = client.get("/activities")
+        assert "newstudent@mergington.edu" in activities_response.json()["Drama Club"]["participants"]
