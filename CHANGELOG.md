@@ -13,6 +13,15 @@
 - Mergington 高中活動管理 API
 - 開發容器配置（Dev Container）
 - VS Code MCP 整合配置
+- **pytest 測試套件**：16 個完整測試，達到 100% 代碼覆蓋率
+  - 根端點測試
+  - 獲取活動端點測試
+  - 報名功能測試
+  - 退登功能測試
+  - 集成測試和邊界情況測試
+- **測試依賴**：pytest、pytest-cov、httpx
+- **測試文檔** (`docs/testing.md`)：詳細的測試運行指南和最佳實踐
+- **pytest 配置檔** (`pytest.ini`)：測試框架配置
 
 ### Changed
 

@@ -8,9 +8,49 @@
   </head>
   <body>
     <header>
-      <h1>Mergington High School</h1>
-      <h2>Extracurricular Activities</h2>
+      <div class="header-content">
+        <div>
+          <h1>Mergington High School</h1>
+          <h2>Extracurricular Activities</h2>
+        </div>
+        <div class="user-section">
+          <button id="user-icon-btn" class="user-icon-btn">👤</button>
+        </div>
+      </div>
     </header>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Teacher Login</h3>
+          <button class="close-btn" id="close-login-modal">&times;</button>
+        </div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required placeholder="teacher username" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" required placeholder="password" />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Login</button>
+            <button type="button" class="btn-secondary" id="close-login-btn">Cancel</button>
+          </div>
+        </form>
+        <div id="login-message" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- Teacher Menu -->
+    <div id="teacher-menu" class="teacher-menu hidden">
+      <div class="menu-content">
+        <p id="teacher-username"></p>
+        <button id="logout-btn" class="btn-logout">Logout</button>
+      </div>
+    </div>
 
     <main>
       <section id="activities-container">

@@ -1,3 +1,17 @@
+### 2025-12-17: 建立開發路線的 GitHub Issues
+
+範圍：根據比較結果，於遠端倉庫新增 6 項增強議題，便於規劃與追蹤。
+
+新增的 Issues：
+- 資料持久化（SQLite + ORM）：https://github.com/caither/skills_copilot-integrate-mcp/issues/8
+- 媒體上傳/縮圖：https://github.com/caither/skills_copilot-integrate-mcp/issues/9
+- 搜尋（基礎版）：https://github.com/caither/skills_copilot-integrate-mcp/issues/10
+- 活動草稿/審核：https://github.com/caither/skills_copilot-integrate-mcp/issues/11
+- 通知/報表：https://github.com/caither/skills_copilot-integrate-mcp/issues/12
+- 即時通訊（WebSocket/Socket.IO）：https://github.com/caither/skills_copilot-integrate-mcp/issues/13
+
+備註：以上均標記為 enhancement，內容含目標、範圍、工作清單、驗收標準與文件同步要求。
+
 # Prompt 輸出記錄
 
 此檔案記錄所有由 GitHub Copilot 產出的主要文本成果，以建立可追溯的輸出日誌。
