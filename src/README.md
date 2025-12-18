@@ -45,11 +45,13 @@ pytest tests/test_app.py --cov=src --cov-report=html
 
 ## API Endpoints
 
-| Method | Endpoint                                                          | Description                                                         |
-| ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
-| GET    | `/activities`                                                     | Get all activities with their details and current participant count |
-| POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
-| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Unregister from an activity                                     |
+| Method | Endpoint                                                          | Parameters                                                         | Description                                                         |
+| ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| GET    | `/activities`                                                     | -                                                                  | Get all activities with their details and current participant count |
+| POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | path: `activity_name`, query: `email`                             | Sign up for an activity                                             |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | path: `activity_name`, query: `email`                         | Unregister from an activity                                         |
+| POST   | `/login`                                                          | body: `{ "email": "student@mergington.edu", "password": "string" }` | Authenticate a student and start a session                          |
+| POST   | `/logout`                                                         | -                                                                  | Log out the current student and invalidate their session            |
 
 ## Data Model
 
