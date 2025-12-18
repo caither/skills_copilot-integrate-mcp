@@ -185,15 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const activity = button.getAttribute("data-activity");
     const email = button.getAttribute("data-email");
 
-    // Only allow teachers to unregister students
-    if (!currentTeacher) {
-      messageDiv.textContent =
-        "Only teachers can remove students from activities";
-      messageDiv.className = "error";
-      messageDiv.classList.remove("hidden");
-      return;
-    }
-
     try {
       const response = await fetch(
         `/activities/${encodeURIComponent(
